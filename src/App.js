@@ -3,19 +3,30 @@ import React, { useState } from 'react';
 const useForm = (initialFormState) => {
   const [form, setForm] = useState(initialFormState);
   return {
-    form,
-    setForm,
-    reset: () => setForm(initialFormState),
-    bind: (name) => ({
-      name: name,
-      value: form[name], // form["firstName"]
-      onChange: (event) => {
-        const { name, value } = event.target;
-        setForm(Object.assign({}, form, { [name]: value }));
-      }
-    })
-  }
-}
+     form,
+     setForm,
+     reset: () => setForm(initialFormState),
+     // works with text, radio, and select elements
+     bind: (name, value) => ({
+        name,
+        value: value || form[name],
+        onChange: (event) => {
+           const { name, value } = event.target;
+           setForm(Object.assign({}, form, { [name]: value }));
+        }
+     }),
+     // works with checkboxes
+     bindCheckbox: (name) => ({
+        name,
+        value: name,
+        checked: form[name],
+        onChange: (event) => {
+           const { checked } = event.target;
+           setForm(Object.assign({}, form, { [name]: checked }));
+        }
+     })
+  };
+};
 
 function App() {
 
